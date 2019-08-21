@@ -1,0 +1,26 @@
+- name: copy agent installer
+  copy:
+    src: "{{userland_installer}}"
+    dest: /tmp/agent-installer.rpm
+
+- name: install agent
+  yum:
+    name: /tmp/agent-installer.rpm
+  when: (ansible_os_family == "RedHat")
+
+- name: set site id
+  shell: /opt/edgewise/bin/edge_agent --cli --set-site-id {{site_id}}
+
+- name: start agent (upstart)
+  command: initctl start edgewise-agent
+  register: upstart_status
+  when: (ansible_os_family == "RedHat" and ansible_distribution_version ==
+"6")
+  failed_when: "'start/running' not in upstart_status.stdout"
+
+- name: start agent (systemd)
+  command: systemctl start edgewise-agent
+  register: systemd_status
+  when: (ansible_os_family == "RedHat" and ansible_distribution_version >=
+"7")
+  failed_when: systemd_status.rc != 0

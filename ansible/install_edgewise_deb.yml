@@ -1,0 +1,26 @@
+- name: copy agent installer
+  copy:
+    src: "{{userland_installer}}"
+    dest: /tmp/agent-installer.deb
+
+- name: install agent
+  apt:
+    deb: /tmp/agent-installer.deb
+  when: (ansible_distribution == "Ubuntu")
+
+- name: set site id
+  shell: /opt/edgewise/bin/edge_agent --cli --set-site-id {{site_id}}
+
+- name: start agent (upstart)
+  command: initctl start edgewise-agent
+  register: upstart_status
+  when: (ansible_distribution == "Ubuntu" and ansible_distribution_version
+== "14.04")
+  failed_when: "'start/running' not in upstart_status.stdout"
+
+- name: start agent (systemd)
+  command: systemctl start edgewise-agent
+  register: systemd_status
+  when: (ansible_distribution == "Ubuntu" and ansible_distribution_version
+>= "16.04")
+  failed_when: systemd_status.rc != 0

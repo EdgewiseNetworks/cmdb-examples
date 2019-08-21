@@ -1,0 +1,12 @@
+---
+- hosts: all
+  remote_user: root
+
+  tasks:
+    - name: for deb install
+      include: install_edgewise_deb.yml
+      when: ansible_os_family == 'Debian'
+
+    - name: for rpm install
+      include: install_edgewise_rpm.yml
+      when: ansible_os_family == 'RedHat'
