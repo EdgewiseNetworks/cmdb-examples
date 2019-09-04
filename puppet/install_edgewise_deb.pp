@@ -14,7 +14,7 @@ class install_edgewise {
 
   exec { 'edgewise-agent-set-siteid':
     user => 'root',
-    command => 'sudo /opt/edgewise/bin/edge_agent --cli --set-site-id <site_id>',
+    command => 'sudo /opt/edgewise/bin/edgewise_setup --set-site-id <site_id>',
     logoutput => true,
     unless => '/usr/bin/test -d /opt/edgewise',
     tag => 'automatic_safe',

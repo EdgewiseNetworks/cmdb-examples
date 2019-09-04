@@ -11,7 +11,7 @@ dpkg_package "edgewise-agent_<version>.rpm" do
 end
 
 execute "edge_agent" do
-  command "sudo /opt/edgewise/bin/edge_agent --cli --set-site-id <site_id>"
+  command "sudo /opt/edgewise/bin/edgewise_setup --set-site-id <site_id>"
 end
 
 execute "systemctl" do

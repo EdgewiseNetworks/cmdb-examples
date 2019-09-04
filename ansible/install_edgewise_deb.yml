@@ -9,7 +9,7 @@
   when: (ansible_distribution == "Ubuntu")
 
 - name: set site id
-  shell: /opt/edgewise/bin/edge_agent --cli --set-site-id {{site_id}}
+  shell: /opt/edgewise/bin/edgewise_setup --set-site-id {{site_id}}
 
 - name: start agent (upstart)
   command: initctl start edgewise-agent
